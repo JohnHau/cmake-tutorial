@@ -1,0 +1,59 @@
+#This file is generate by FAT, do NOT modify!
+
+sources {
+	FcbFile = extern (0);
+	L2File = extern (1);
+	AppKickerPrimary = extern (2);
+	AppKickerSecondary = extern (3);
+	AppFilePrimary = extern (4);
+	AppFileSecondary = extern (5);
+	AppFileXIP = extern (6);
+}
+
+section (0) {
+
+	# Load FCB file to ITCM address 0x2000
+	load FcbFile > 0x2000;
+
+	# Configure FLASH using options on address 0x2000
+	enable flexspinor 0x2000;
+
+	# Erase flash for FCB and L2 - from flash base to the beginning of the first partition
+	erase 0x60000000..0x60020000;
+
+	# Prepare PRDB0 options
+	load 0xe0110000 > 0x4000;
+	load 0x60001000 > 0x4004;
+	load 0x7f000 > 0x4008;
+	enable flexspinor 0x4000;
+
+	# Program config block
+	load 0xf000000f > 0x3000;
+	enable flexspinor 0x3000;
+
+	# Program L2 image
+	load L2File > 0x60001000;
+
+	# Program Kicker
+	erase 0x60020000..0x60080000;
+	load AppKickerPrimary > 0x60020000;
+	load AppKickerSecondary > 0x60040000;
+
+	# Prepare PRDB1 options
+	load 0xe4120000 > 0x4000;
+	load 0x60080000 > 0x4004;
+	load 0x400000 > 0x4008;
+	load 0x60e00000 > 0x400c;
+	load 0x200000 > 0x4010;
+	enable flexspinor 0x4000;
+
+	# Program App
+	erase 0x60080000..0x6016edb0;
+	load AppFilePrimary > 0x60080000;
+	erase 0x60280000..0x6029c240;
+	load AppFileSecondary > 0x60280000;
+	erase 0x60e00000..0x61000000;
+	load AppFileXIP > 0x60e00000;
+
+}
+

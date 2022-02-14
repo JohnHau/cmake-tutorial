@@ -1,0 +1,14 @@
+#This file is generate by FAT, do NOT modify!
+
+sources {
+	ConfigFile = extern (0);
+}
+
+section (0) {
+
+	# Program Config
+	erase 0x60481000..0x60485210;
+	load ConfigFile > 0x60481000;
+
+}
+

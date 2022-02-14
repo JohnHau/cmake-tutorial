@@ -1,0 +1,6 @@
+Version 1.6:
+flashloader: clear flash status register1 to disable flash protection.
+program batch file: modified erase command to reduce erase time.
+
+Version 1.5:
+flashloader: update flashloader for secure application & data integrity.
